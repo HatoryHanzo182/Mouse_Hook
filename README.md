@@ -1,4 +1,4 @@
-#mouse hook
+#MOUSE HOOK
 
 This project focuses on mouse event logic and does not focus on creating a visually appealing user interface.
 
