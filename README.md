@@ -1,8 +1,8 @@
-#MOUSE HOOK
+# MOUSE HOOK
 
 This project focuses on mouse event logic and does not focus on creating a visually appealing user interface.
 
-##Functions
+## Functions
 - When you press the "Start" button, the application displays the history of mouse movements.
 - Left mouse click on the panel is represented by a circle on the image, and the click coordinates are displayed in the list.
 - A right-click on a panel is represented by a square on the image, and the click coordinates are displayed in a list.
