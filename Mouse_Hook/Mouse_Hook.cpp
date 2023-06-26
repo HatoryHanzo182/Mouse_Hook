@@ -1,5 +1,4 @@
-﻿#include "framework.h"
-#include "Mouse_Hook.h"
+﻿#include "Mouse_Hook.h"
 
 /*
   * 
