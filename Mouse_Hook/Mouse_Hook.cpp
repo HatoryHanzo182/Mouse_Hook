@@ -1,6 +1,26 @@
 ﻿#include "framework.h"
 #include "Mouse_Hook.h"
-#include <fstream>
+
+/*
+  * 
+  * The code is a simple Windows application that intercepts and handles mouse events at a low level. 
+  * It creates the main application window with "MS LL start" and "MS LL stop" buttons to activate and deactivate mouse capture. 
+  * When mouse interception is activated, the application responds to various mouse events such as movement, clicks, and 
+  * wheel scrolling and displays relevant information on the screen.
+  *
+  *    Main components of the code:
+  * 1. Definition of constants and global variables.
+  * 2. Registering a custom window class.
+  * 3. Initialization and creation of the main application window.
+  * 4. Message handler of the main window.
+  * 5. Functions for activating and deactivating mouse interception.
+  * 6. Function-interceptor of mouse events at a low level.
+  *
+  * The code also contains functions for displaying information on the screen, creating and
+  * managing a Device Context, drawing on a Device Context (eg, lines, ellipses, rectangles),
+  * and manipulating memory for storing images. 
+  *
+*/
 
 #define MAX_LOADSTRING 100
 #define CMD_MS_LL_START 1005
@@ -35,7 +55,9 @@ DWORD CALLBACK StopMsHookLL(LPVOID);
 LRESULT CALLBACK MsHookProcLL(int, WPARAM, LPARAM);
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow)
-{
+{              // The entry point to a Windows program.
+              // Provides the core structure of a Windows application, including window creation and
+             // handling, resource loading, and the main message loop.
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
@@ -59,7 +81,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
     return (int)msg.wParam;
 }
 
-ATOM MyRegisterClass(HINSTANCE hInstance)
+ATOM MyRegisterClass(HINSTANCE hInstance)  // Registering a custom window class, including window handler, icons, cursors.
 {
     WNDCLASSEXW wcex;
 
@@ -79,7 +101,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     return RegisterClassExW(&wcex);
 }
 
-BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
+BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)  // Initializes an instance of the application and creates the main window.
 {
     hInst = hInstance;
 
@@ -106,8 +128,9 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
     return TRUE;
 }
 
-LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
-{
+LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)  // Message handler for the application's main window and 
+{                                                                               // defines the application's behavior in response to various messages and 
+                                                                               // commands associated with the window and its interface components.
     switch (message)
     {
     case WM_CREATE:
@@ -178,8 +201,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     return 0;
 }
 
-INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
-{
+INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)  // Allows you to process messages related to initialization and 
+{                                                                             // commands that appear in this dialog box.
     UNREFERENCED_PARAMETER(lParam);
 
     switch (message)
@@ -198,8 +221,8 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
     return (INT_PTR)FALSE;
 }
 
-DWORD CALLBACK StartMsHookLL(LPVOID)
-{
+DWORD CALLBACK StartMsHookLL(LPVOID)  // Run a global interception of a low-level mouse hook, check its status, and 
+{                                    // update the corresponding information in the user interface.
     if (msLL != 0)
         _snwprintf_s(str, MAX_LOADSTRING, L"MS hook works");
     else
@@ -219,8 +242,8 @@ DWORD CALLBACK StartMsHookLL(LPVOID)
     return 0;
 }
 
-DWORD CALLBACK StopMsHookLL(LPVOID)
-{
+DWORD CALLBACK StopMsHookLL(LPVOID)  // Stop the global interception of the low-level mouse hook and 
+{                                   // update the corresponding information in the user interface.
     if (msLL != 0)
     {
         UnhookWindowsHookEx(msLL);
@@ -236,8 +259,8 @@ DWORD CALLBACK StopMsHookLL(LPVOID)
     return 0;
 }
 
-LRESULT CALLBACK MsHookProcLL(int nCode, WPARAM wParam, LPARAM lParam)
-{
+LRESULT CALLBACK MsHookProcLL(int nCode, WPARAM wParam, LPARAM lParam)  // The MsHookProcLL function intercepts and processes mouse messages 
+{                                                                      // and renders user actions on the msTraceDC and memoryDC device context.
     if (nCode == HC_ACTION)
     {
         MOUSEHOOKSTRUCT msInfo = *((MOUSEHOOKSTRUCT*)lParam);
@@ -323,3 +346,77 @@ LRESULT CALLBACK MsHookProcLL(int nCode, WPARAM wParam, LPARAM lParam)
     }
     return CallNextHookEx(kbLL, nCode, wParam, lParam);
 }
+
+
+            //_________________¶¶111111¶11111111111111¶¶111¶____
+            //_________________¶¶11111¶111111111111111¶¶111¶____
+            //________________¶¶111111¶11111111¶¶11¶¶¶¶1111¶____
+            //_______________¶¶1111111111111111¶¶¶¶¶¶¶11111¶____
+            //_____________1¶¶11111111111111111¶¶___¶¶11111¶____
+            //___________¶¶¶¶11111¶1111111¶¶1111¶¶¶11¶11111¶____
+            //_________¶¶¶111111111111111111111111¶¶¶¶11111¶____
+            //_______1¶¶11111111111111111111111111111¶¶¶111¶____
+            //______¶¶111111111111111111111111111111111¶¶¶1¶____
+            //_____¶¶1111111111111111¶11¶¶111111111111111¶¶¶____
+            //____¶¶11111111111111111¶¶¶¶11111111111111111¶¶____
+            //___¶¶1111111111111111111¶¶1111111111111111111¶¶___
+            //__¶¶11111111111111111111¶¶11111111111111111111¶¶__
+            //__¶111111111111111111111¶1111111111111111111111¶__
+            //_¶¶11111111111111111111¶¶1111111111111111111111¶¶_
+            //_¶111111111111111111111¶¶1111111111111111111111¶¶_
+            //_¶111111111111111111111¶¶1111111111111111111111¶¶_
+            //1¶111111111111111111111¶¶1111111111111111111111¶¶_
+            //1¶111111111111111111111¶¶1111111111111111111111¶¶_
+            //1¶111111111111111111111¶¶1111111111111111111111¶1_
+            //_¶1111111111111111111111¶¶11111111111111111111¶¶__
+            //_¶1111111111111111111111¶¶11111111111111111111¶1__
+            //_¶111111111111111111111¶¶¶¶111111111111111111¶¶___
+            //_¶¶1111111111111111111¶¶1¶¶¶¶111111111111111¶¶____
+            //_1¶1111111111111111¶¶¶¶¶¶¶¶¶¶¶¶111111111111¶¶1____
+            //__¶11111111111¶¶¶¶¶¶¶¶¶¶¶_¶¶¶¶¶¶¶¶¶¶¶11111¶¶¶1____
+            //__¶¶1111111111¶¶¶¶11111¶¶_¶¶1111¶¶¶¶1111¶¶¶1¶¶____
+            //__1¶¶¶11111111111111111¶¶_¶1¶1111111111¶¶¶11¶¶____
+            //___¶¶¶¶¶1111111111111111¶¶¶¶1111111111¶¶_¶_1¶¶____
+            //___1¶111¶¶¶11111111111111¶¶¶¶111111¶1¶¶_1¶_11¶____
+            //____¶¶1111¶¶¶111111111111¶¶¶1111111¶¶¶_¶¶1111¶____
+            //____1¶111111¶¶¶1111111111¶1¶¶1111111¶¶¶11¶11¶¶____
+            //_____¶¶1111111¶¶¶¶1111111¶¶¶¶111111111¶1¶¶_1¶¶____
+            //_____1¶1111111111¶¶¶¶1111¶¶1¶¶11111111¶¶¶¶_1¶1____
+            //______¶¶11111111111¶¶¶¶111¶1¶¶111111111¶¶¶__¶1____
+            //______1¶11111111111111¶¶¶¶¶_1¶1111111111¶¶111¶____
+            //_______¶¶111111111111111¶¶¶1¶¶1111111111¶¶¶¶¶¶1___
+            //________¶111111111111111¶¶__1¶¶¶11111111¶¶¶1¶¶¶___
+            //________¶¶111111111111111¶1__1¶1¶¶¶¶¶1111¶¶¶¶¶¶1__
+            //_________¶111111111111111¶¶___¶111¶¶¶¶¶¶¶¶¶¶_1¶___
+            //_________¶¶11111111111111¶¶___¶¶1111111¶¶¶____¶___
+            //__________¶1111111111111¶¶_____¶111111111¶________
+            //__________¶¶111111111111¶¶_____¶¶1111111¶¶________
+            //___________¶111111111111¶1______¶1111111¶¶________
+            //___________¶¶11111111111¶_______¶¶111111¶¶________
+            //____________¶1111111111¶¶________¶111111¶¶________
+            //____________¶¶111111111¶¶________¶¶11111¶¶________
+            //____________1¶111111111¶¶_________¶11111¶¶________
+            //_____________¶¶11111111¶1_________¶¶1111¶¶________
+            //_____________¶¶111¶1111¶__________1¶1111¶¶________
+            //______________¶111¶¶111¶¶__________¶¶1111¶________
+            //______________¶111¶¶111¶¶__________¶¶1111¶________
+            //______________¶11111111¶1__________1¶1¶¶1¶¶_______
+            //_____________¶¶11111111¶____________¶1¶¶11¶_______
+            //____________1¶111111111¶____________¶11__1¶_______
+            //____________¶¶11111111¶¶____________¶¶¶¶¶¶¶_______
+            //____________¶111111111¶¶____________¶¶¶¶¶¶¶_______
+            //____________¶1111111111¶____________¶¶¶¶¶¶¶¶______
+            //___________1¶1111111111¶____________¶¶¶¶¶¶¶¶______
+            //___________1¶1111111111¶1___________¶¶¶¶¶¶¶¶1_____
+            //____________¶1111111111¶¶___________1¶¶¶¶¶¶¶______
+            //____________¶1111111111¶¶____________¶¶¶¶¶¶¶______
+            //____________¶¶111111111¶¶____________¶¶¶¶¶¶¶¶_____
+            //____________1¶1111111111¶_____________¶¶¶¶¶¶¶_____
+            //_____________¶1111111111¶_____________¶¶¶¶¶¶¶¶____
+            //_____________¶¶111111111¶_____________1¶¶¶¶¶¶¶¶___
+            //______________¶111111111¶1____________¶¶¶¶¶¶¶¶¶¶__
+            //______________¶¶11111111¶1____________¶¶¶¶¶¶¶¶¶¶__
+            //_______________¶11111111¶¶___________¶¶¶¶¶¶¶¶¶¶1__
+            //_______________¶¶1111111¶¶___________¶¶¶¶¶¶¶¶¶¶___
+            //________________¶¶111111¶¶____________¶¶¶¶¶¶¶¶____
+            //_________________¶111111¶¶_____________¶¶¶¶¶¶_____
